@@ -23,6 +23,8 @@ val kotlinLoggingVersion = "1.7.6"
 val koinVersion = "2.0.1"
 val konfVersion = "0.20.0"
 val jedisVersion = "3.1.0"
+val bucket4jVersion = "4.5.0"
+val caffeineVersion = "2.8.0"
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
@@ -37,6 +39,10 @@ dependencies {
     implementation("org.koin:koin-core:$koinVersion")
     implementation("com.uchuhimo:konf-core:$konfVersion")
     implementation("redis.clients:jedis:$jedisVersion")
+    implementation("com.github.vladimir-bukhtoyarov:bucket4j-core:$bucket4jVersion")
+    implementation("com.github.vladimir-bukhtoyarov:bucket4j-jcache:$bucket4jVersion")
+    implementation("com.github.ben-manes.caffeine:caffeine:$caffeineVersion")
+    implementation("com.github.ben-manes.caffeine:jcache:$caffeineVersion")
 
 }
 
