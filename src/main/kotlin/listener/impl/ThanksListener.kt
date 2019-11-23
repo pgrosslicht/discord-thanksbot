@@ -27,7 +27,7 @@ class ThanksListener(private val reputationService: ReputationService, private v
             }
 
             return ctx.message.userMentions
-                .filter { it.isBot }
+                .filter { !it.isBot }
                 .flatMap { it.asMember(ctx.guildId) }
                 .collectList()
                 .flatMap {
