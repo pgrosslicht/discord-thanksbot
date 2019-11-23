@@ -1,7 +1,11 @@
 package com.grosslicht.discord.thanksbot.di
 
+import com.grosslicht.discord.thanksbot.commands.GetReputationCommand
+import com.grosslicht.discord.thanksbot.commands.TopReputationCommand
 import com.grosslicht.discord.thanksbot.config.BotConfig
 import com.grosslicht.discord.thanksbot.config.BotSpec
+import com.grosslicht.discord.thanksbot.listener.impl.CommandListener
+import com.grosslicht.discord.thanksbot.listener.impl.ThanksListener
 import com.grosslicht.discord.thanksbot.service.api.MessageHandler
 import com.grosslicht.discord.thanksbot.service.api.ReputationService
 import com.grosslicht.discord.thanksbot.service.impl.MessageHandlerImpl
@@ -22,5 +26,9 @@ val botModule = module {
         JedisPool(JedisPoolConfig(), botConfig[BotSpec.Jedis.host], botConfig[BotSpec.Jedis.port])
     }
     single { RedisReputationService(get()) as ReputationService }
-    single { MessageHandlerImpl(get()) as MessageHandler }
+    single { MessageHandlerImpl() as MessageHandler }
+    single { ThanksListener(get()) }
+    single { CommandListener() }
+    single { GetReputationCommand(get()) }
+    single { TopReputationCommand(get()) }
 }

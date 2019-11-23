@@ -13,7 +13,7 @@ class RedisReputationService(private val jedisPool: JedisPool) : ReputationServi
             ReputationContext(
                 guildId,
                 memberId,
-                jedisPool.resource.use { it.zincrby(guildId, 1.0, memberId) }.toInt()
+                jedisPool.resource.use { it.zincrby(guildId, 1.0, memberId) }
             )
         }.subscribeOn(Schedulers.elastic())
     }
@@ -28,8 +28,15 @@ class RedisReputationService(private val jedisPool: JedisPool) : ReputationServi
             ReputationContext(
                 guildId,
                 memberId,
-                jedisPool.resource.use { it.zscore(guildId, memberId) }.toInt()
+                jedisPool.resource.use { it.zscore(guildId, memberId) } ?: 0.toDouble()
             )
         }.subscribeOn(Schedulers.elastic())
+    }
+
+    override fun topReputation(guildId: String, amount: Long): Flux<ReputationContext> {
+        return Mono.fromCallable { jedisPool.resource.use { it.zrevrangeWithScores(guildId, 0, amount.dec().coerceAtLeast(0)) } }
+            .subscribeOn(Schedulers.elastic())
+            .flatMapMany { Flux.fromIterable(it) }
+            .map { ReputationContext(guildId, it.element, it.score) }
     }
 }
